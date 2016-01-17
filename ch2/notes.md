@@ -44,7 +44,7 @@ Then ask about `Enum` using `:info`:
 So you can see the other things that work on an `Enum`, like `pred`:
 
     Prelude> pred 'b'
-   'a'
+    'a'
 
 # Function files
 
