@@ -6,10 +6,45 @@
 ## Basic syntax
 
 * neq is /=
-* `succ 8` gives `9`, but `succ "a"` spits chips
+* `succ 8` gives `9`, but `succ "a"` spits chips, while `succ 'a'` works fine.
 * note absence of a bracket, e.g. `min 9 10`
  * but need brackets for functions in succession, like `succ (succ 8)`
  * `min 9 10 11` spits, so maybe `min 9 (min 10 11)`
+
+## What does `succ` do?
+
+Check its type, and you see the `Enum` typeclass:
+
+    Prelude> :t succ
+    succ :: Enum a => a -> a
+
+Then ask about `Enum` using `:info`:
+
+    Prelude> :info Enum
+    class Enum a where
+      succ :: a -> a
+      pred :: a -> a
+      toEnum :: Int -> a
+      fromEnum :: a -> Int
+      enumFrom :: a -> [a]
+      enumFromThen :: a -> a -> [a]
+      enumFromTo :: a -> a -> [a]
+      enumFromThenTo :: a -> a -> a -> [a]
+  	    -- Defined in ‘GHC.Enum’
+    instance Enum Word -- Defined in ‘GHC.Enum’
+    instance Enum Ordering -- Defined in ‘GHC.Enum’
+    instance Enum Integer -- Defined in ‘GHC.Enum’
+    instance Enum Int -- Defined in ‘GHC.Enum’
+    instance Enum Char -- Defined in ‘GHC.Enum’
+    instance Enum Bool -- Defined in ‘GHC.Enum’
+    instance Enum () -- Defined in ‘GHC.Enum’
+    instance Enum Float -- Defined in ‘GHC.Float’
+    instance Enum Double -- Defined in ‘GHC.Float’
+
+So you can see the other things that work on an `Enum`, like `pred`:
+
+    Prelude> pred 'b'
+   'a'
 
 # Function files
 
