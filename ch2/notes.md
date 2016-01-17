@@ -49,6 +49,7 @@ So you can see the other things that work on an `Enum`, like `pred`:
 # Function files
 
 * `:l baby`
+* Conveniently, `:r` reloads the current module/file.
 * the `else` is mandatory, every expression must return something, 
 
 # Lists
