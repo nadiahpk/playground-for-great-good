@@ -101,7 +101,98 @@ ghci> take 3 lostNumbers
 [4,8,15]
 ghci> lostNumbers
 [4,8,15,16,23,42]
+ghci> take 0 lostNumbers 
+[]
+ghci> let c = take 3 lostNumbers 
+ghci> c
+[4,8,15]
+```
+* `drop` is like `take`, but from the end
+```
+ghci> drop 3 lostNumbers 
+[16,23,42]
+```
+* other things that'll do what you expect: `maximum`, `minimum`, `sum`, `product`
+* `elem` checks if it's an element of
+```
+ghci> elem 4 lostNumbers 
+True
+ghci> 4 `elem` lostNumbers -- as an infix function, apparently easier to read
+True 
 ```
 
+## Create
 
-*UP TO DROP*
+* in a range:
+```
+hci> let r = [1..20]
+ghci> r
+[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+ghci> let r = ['b'..'j']
+ghci> r
+"bcdefghij"
+```
+* specifying increment:
+```
+ghci> [1,4..20]
+[1,4,7,10,13,16,19]
+```
+* woah. you can specify an infinite list, and only take the bit that you need from it, and Haskell won't generate the whole list for you
+```
+ghci> take 5 [13,26..]
+[13,26,39,52,65]
+ghci> [13,26..]
+-- actually tries to generate the whole list for you 
+```
+* more infinite lists
+ * `cycle`
+```
+ghci> take 9 (cycle "lol ")
+"lol lol l"
+ghci> drop 9 (cycle "lol ")
+-- this doesn't work though
+```
+ * `repeat`, like cycle with one element
+```
+ghci> take 3 (repeat 12)
+[12,12,12]
+```
+
+## List comprehensions
+
+* Uses the syntax from maths
+ * Some examples
+```
+ghci> [x*2 | x <- [1..5]]
+[2,4,6,8,10]
+ghci> [x*2 | x <- [1..5], x*2 >= 8] -- note condition has to go after the thing that gets x
+[8,10]
+ghci> [x*2 | x <- [1..5], x*2 >= 8, x*2 < 10]
+[8]
+```
+ * All the numbers up to 100 that are divisible by 24
+```
+ghci> mod 52 7 -- Recall how mod works
+3
+ghci> [x | x<-[0..100], mod x 24 == 0]
+[0,24,48,72,96]
+```
+ * Two lists used, does all combinations, with the later list cycled through first. Note the ordering on these.
+```
+ghci> [[x,y] | x<-[0..2], y<-[10..12]]
+[[0,10],[0,11],[0,12],[1,10],[1,11],[1,12],[2,10],[2,11],[2,12]]
+ghci> [[x,y] | y<-[10..12], x<-[0..2]]
+[[0,10],[1,10],[2,10],[0,11],[1,11],[2,11],[0,12],[1,12],[2,12]]
+```
+ * Use an underscore for variables that are unused... (why would you want this?)
+```
+length' xs = sum [1 | _ <- xs]   
+```
+ * Can nest comprehensions
+```
+ghci> let xxs = [[1,3,5,2,3,1,2,4,5],[1,2,3,4,5,6,7,8,9],[1,2,4,2,1,6,3,1,3,2,3,6]]  
+ghci> [ [ x | x <- xs, even x ] | xs <- xxs]  
+[[2,2,4],[2,4,6,8],[2,4,2,6,2,6]]  
+```
+
+*UP TO TUPLES*
