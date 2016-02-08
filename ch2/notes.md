@@ -150,7 +150,8 @@ ghci> [13,26..]
 ghci> take 9 (cycle "lol ")
 "lol lol l"
 ghci> drop 9 (cycle "lol ")
--- this doesn't work though
+-- this doesn't work though because `drop 9 <infinite list>` is still an infinite list.
+ghci> drop 3 [1..] == [4, 5, ..]
 ```
  * `repeat`, like cycle with one element
 ```
