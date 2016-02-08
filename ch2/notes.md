@@ -195,4 +195,21 @@ ghci> [ [ x | x <- xs, even x ] | xs <- xxs]
 [[2,2,4],[2,4,6,8],[2,4,2,6,2,6]]  
 ```
 
-*UP TO TUPLES*
+## Tuples
+
+* the length of the tuple is part of its type, so you can have `[(1,2),(4,5)]` but not `[(1,2),(1,4,5)]`
+* but you can mix types within a tuple, e.g. `(1,"one")`
+* `zip` is like python
+```
+ghci> let l1 = [1,2,3,4,5]
+ghci> let l2 = [5,5,5,5,5]
+ghci> zip l1 l2
+[(1,5),(2,5),(3,5),(4,5),(5,5)]
+```
+ * note you can also use infinite lists here
+ ```
+ ghci> zip [5,3,2,6,2,7,2,5,4,6,6] ["im","a","turtle"] 
+ [(5,"im"),(3,"a"),(2,"turtle")]
+ ```
+
+
