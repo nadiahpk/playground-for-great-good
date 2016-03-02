@@ -1,3 +1,5 @@
+module Baby where
+
 -- http://learnyouahaskell.com/starting-out
 --
 -- how to define a function
