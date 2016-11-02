@@ -1,0 +1,3 @@
+
+-- | succOrId :: Int -> Int
+-- | succOrId x = Dist.uniform [x, x+1]
