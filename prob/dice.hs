@@ -43,9 +43,8 @@ droll = do
 -- same as above but easier to read
 droll2 :: Dist Int
 -- droll2 = die >>= succOrId -- these bits are called "bindings"
-droll2 = die >>= succOrId >>= succOrId -- you can chain them apparently, nice
-
--- QUESTION TODO: how do I make a chain of user-specified arbitrary length? 
+droll2 = die >>= succOrId >>= succOrId -- you can chain them apparently, nice 
+-- See drollN for arbitrary length
 
 
 -- Querying the dice - it's done with a ??
@@ -56,8 +55,7 @@ twoDice :: Dist (Int,Int)
 twoDice = liftM2 (,) die die
 -- ghci> twoDice
 -- fromFreqs [((1,1),1 % 16),((1,2),1 % 16),((1,3),1 % 16),((1,4),1 % 16),((2,1),1 % 16),((2,2),1 % 16),((2,3),1 % 16),((2,4),1 % 16),((3,1),1 % 16),((3,2),1 % 16),((3,3),1 % 16),((3,4),1 % 16),((4,1),1 % 16),((4,2),1 % 16),((4,3),1 % 16),((4,4),1 % 16)]
-
--- QUESTION TODO: how would I make a distribution of an arbitrary number of dice?
+-- See dice for any number of die
 
 
 twoSixes :: Probability
@@ -96,6 +94,7 @@ addThree =
     liftM3 (+) die die die
 -}
 
+
 -- Repeated application
 -- --------------------
 
@@ -106,4 +105,50 @@ dice = flip replicateM die
 -- ghci> dice 2
 -- fromFreqs [([1,1],1 % 16),([1,2],1 % 16),([1,3],1 % 16),([1,4],1 % 16),([2,1],1 % 16),([2,2],1 % 16),([2,3],1 % 16),([2,4],1 % 16),([3,1],1 % 16),([3,2],1 % 16),([3,3],1 % 16),([3,4],1 % 16),([4,1],1 % 16),([4,2],1 % 16),([4,3],1 % 16),([4,4],1 % 16)]
 
--- UP TO HERE: figure out what flip, replicateM mean
+
+-- Carlo explains what flip and replicateM do
+-- ------------------------------------------
+
+-- C: flip just flips the arguments to the function:
+myflip :: (t1 -> t2 -> t) -> t2 -> t1 -> t -- is this how to do it?
+myflip f x y = f y x
+-- ghci> myflip (/) 4 5
+-- 1.25
+
+-- C: Here's how to write dice without using flip.
+-- C: The "dice" function was written in "point free form"
+-- C: since the left hand side was just "dice =", not "dice n =".
+-- C: I usually prefer to write out the arguments since it's easier
+-- C: to read.
+diceWithoutFlip :: Int -> Dist [Int]
+diceWithoutFlip n = replicateM n die
+
+-- C: replicateM is used to repeatedly run a monadic action:
+myReplicateM n action
+    = if n <= 0
+        then return []
+        else do this <- action
+                rest <- myReplicateM (n-1) action
+                return (this:rest)
+
+-- An explainer http://sleepomeno.github.io/blog/2014/06/25/Explaining-the-Magic/
+
+-- C: Here's how to write dice without flip or replicateM:
+gumbyDice :: Int -> Dist [Int]
+gumbyDice n
+    = if n <= 0
+        then return []
+        else do thisRoll  <- die
+                restRolls <- gumbyDice (n-1)
+                return (thisRoll:restRolls)
+
+
+-- Make some things
+-- ----------------
+
+{-
+droll2 :: Dist Int
+droll2 = die >>= succOrId >>= succOrId -- can you make it arbitrary length?
+-}
+drollN :: Int -> Dist Int
+drollN n = iterate (>>= succOrId) die !! n 
