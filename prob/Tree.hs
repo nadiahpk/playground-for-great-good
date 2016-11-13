@@ -12,6 +12,7 @@ import Control.Monad.HT ((<=<), )
 
 composeM :: Monad m => [a -> m a] -> a -> m a
 composeM = foldl (flip (<=<)) return
+-- composeM = foldl (>=>) return -- Told me to try this but didn't work
 
 iterateM :: Monad m => Int -> (a -> m a) -> (a -> m a)
 iterateM n f = composeM $ replicate n f
@@ -60,3 +61,9 @@ tree n = iterateM n evolve
 -- ghci> tree 2 seed
 -- fromFreqs [(Alive 6, 16.9%),(Fallen, 15.4%),(Alive 5, 14.5%),(Alive 7, 14.5%),(Alive 4, 10.2%),(Alive 8, 10.2%),(Alive 3,  5.5%),(Alive 9,  5.5%),(Alive 2,  1.9%),(Alive 10,  1.9%),(Hit 3,  0.9%),(Hit 2,  0.8%),(Hit 4,  0.8%),(Hit 1,  0.5%),(Hit 5,  0.5%)]
 
+
+-- aside: figure out what compose and iterate are about
+-- ----------------------------------------------------
+-- composeM = foldl (flip (<=<)) return
+-- first do [ ] chapter 8 learn you haskell
+--          [x] this: http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
