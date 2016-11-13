@@ -140,15 +140,19 @@ third x = if (x `mod` 3) == 0
     then Just (x `div` 3)
     else Nothing
 
-by2 :: Integral a => a -> Maybe a -- Integral refers to integer-like things, things you could apply `even` to
-by2 x = if x > 10
-    then Nothing
-    else Just (x*2)
-
 -- ghci> third 6
 -- Just 2
 -- ghci> third 5
 -- Nothing
+
+
+-- Creating by2 so I can keep track of the ordering of things
+-- ----------------------------------------------------------
+
+by2 :: Integral a => a -> Maybe a -- Integral refers to integer-like things, things you could apply `even` to
+by2 x = if x > 10
+    then Nothing
+    else Just (x*2)
 
 -- ghci> composeM [(half), (by2)] 1
 -- Nothing
@@ -215,6 +219,10 @@ compose4 = foldr (<=<) return
 -- foldl:   f (... (f (f x y1) y2) ...) yk
 
 
+-- Now apply that to the above
+-- ---------------------------
+
+
 -- ghci> let ff = foldr (<=<) id [(half), (by2)]
 -- ghci> ff 1
 --   ERROR
@@ -231,3 +239,4 @@ compose4 = foldr (<=<) return
 -- Just 1
 
 -- NEXT -- figure out why they used foldl and flip etc.
+-- Bring it all together
