@@ -93,6 +93,12 @@ half x = if even x
 -- [compare to half . half $ 8]
 
 
+
+-- ===================================================
+-- GOAL: composeM and iterateM are from prob package.
+-- Understand what they mean.
+-- ===================================================
+
 composeM :: Monad m => [a -> m a] -> a -> m a
 composeM = foldl (flip (<=<)) return
 -- composeM = foldl (>=>) return -- Told me to try this but didn't work
