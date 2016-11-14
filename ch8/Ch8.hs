@@ -214,7 +214,7 @@ compose4 = foldr (<=<) return
 --              (      53          )
 -- foldl        (  (54 - 10) - 11  )
 --
--- if foldr f x ys where ys = [y1,y2,...,yk] 
+-- if f x ys where ys = [y1,y2,...,yk] 
 -- foldr:   f y1 (f y2 (... (f yk x) ...))
 -- foldl:   f (... (f (f x y1) y2) ...) yk
 
@@ -238,5 +238,46 @@ compose4 = foldr (<=<) return
 -- ghci> ff 1
 -- Just 1
 
--- NEXT -- figure out why they used foldl and flip etc.
--- Bring it all together
+
+-- Particulars of composeM -- flip, foldl
+-- --------------------------------------
+
+
+-- recall:
+-- composeM = foldl (flip (<=<)) return
+-- compose2 = foldl (<=<) return
+-- compose4 = foldr (<=<) return
+
+-- ghci> let myList = [(half), (by2)]
+-- ghci> let ffM = composeM myList
+-- ghci> let ff2 = compose2 myList
+-- ghci> let ff4 = compose4 myList
+-- ghci> ffM 1 -- foldl (flip ..)
+-- Nothing
+-- ghci> ff2 1 -- foldl
+-- Just 1
+-- ghci> ff4 1 -- foldr
+-- Just 1
+--
+-- if f   x    ys   where   ys   = [y1,y2,...,yk] 
+--   <=< ret myList where myList = [half, by2]
+-- foldr:    f   y1     (... ( f    yk     x  ) ...)
+-- foldr:   <=<  half   (     <=<   by2   ret      )
+-- foldr:   <=<  half   (     by2  <=<  ret      )
+-- foldr:   half  <=<   (     by2  <=<  ret      )
+-- foldr:   half  <=<   (     by2        )
+-- foldr:   half  <=<   by2
+--
+-- foldl:    f          (... ( f    x     y1  ) ...) yk
+-- foldl:   <=<         (     <=<  ret   half      ) by2
+-- foldl:   <=<         (     ret  <=<   half      ) by2
+-- foldl:               (     ret  <=<   half      ) <=< by2
+-- foldl:               (     half      ) <=< by2
+-- foldl:                     half <=< by2
+--
+-- foldl flip
+-- foldlf:   f          (... ( f       x     y1  ) ...) yk
+-- foldlf: fl(<=<)      (   fl(<=<)   ret   half      ) by2
+-- foldlf: fl(<=<)      (     half   <=<   ret        ) by2
+-- foldlf:    by2 <=<   (     half   <=<   ret        )
+-- foldlf:    by2 <=<   half  
